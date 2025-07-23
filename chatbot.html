@@ -7,12 +7,16 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+  <link rel="stylesheet" href="./chat.css"/>
 
 </head>
 <body>
   <div class="container"></div>
-
+  <button class="theme-button" onClick="toggleTheme()" >Theme</button>
   <script type="text/babel">
+
+    
+
     function ChatInput({chatMessages,setChatMessages}) {
 
       const[inputText,setInputText] = React.useState( '');
@@ -22,6 +26,8 @@
       }
 
       function sendMessage(){
+        if (!inputText.trim()) return;
+
         const newChatMessages = [
           ...chatMessages,
           {
@@ -45,28 +51,37 @@
 
 
           setInputText('');
+
+      }
+      function handleKeyPress(event){
+        if(event.key === "Enter"){
+          sendMessage();
+        }
       }
       return (
-        <>
+        <div class="input-text">
           <input 
             placeholder="Message with chatbot" 
             size="20"
             onChange={saveInputText}
-            value = {inputText}
+            onKeyDown={handleKeyPress}
+            value={inputText}
+            class="input"
           />
           <button 
             onClick={sendMessage}
+            class = "send-button"
           >Send</button>
-        </>
+        </div>
       );
     }
 
     function ChatMessage({ message, sender }) {
       return (
-        <div>
-          {sender === 'bot' && <img src="./Bot.webp" width="50" />}
-          {message}
-          {sender === 'user' && <img src="./Profile.webp" width="50" />}
+        <div class={`message-by-${sender}`} >
+          {sender === 'bot' && <img class="bot-im" src="./Bot.webp" width="50" />}
+          <div class="text-mes" >{message}</div>
+          {sender === 'user' && <img class="profile-im" src="./Profile.webp" />}
         </div>
       );
     }
